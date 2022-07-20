@@ -521,11 +521,11 @@ function draw() {
     rect(0, 0, WIDTH, HEIGHT);
 
     textStyle(NORMAL);
-    textSize(160);
+    textSize(120);
     textAlign(CENTER, CENTER);
     let c = color(0, 0, 0);
     fill(c);
-    text("CLICK ME!", 0, 0, WIDTH, HEIGHT);
+    text("CLICK ME!", 0, HEIGHT / 4, WIDTH, HEIGHT - (HEIGHT / 4));
     textSize(32);
     text("A: Left - D: Right\nSpace: Jump\nLMB: Shoot", 0, DEFAULT_PADDING, WIDTH, HEIGHT / 4);
     rectMode(CENTER);
