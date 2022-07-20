@@ -350,6 +350,12 @@ const crouching =
   a: 1
 };
 
+function windowResized() {
+  resizeCanvas(windowWidth - 30, windowHeight - 30);
+  HEIGHT = height;
+  WIDTH = width;
+}
+
 function setup() {
   createCanvas(windowWidth - 30, windowHeight - 30);
   HEIGHT = height;
