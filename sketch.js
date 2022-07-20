@@ -423,7 +423,7 @@ function draw_stack(stack, offset) {
       item.colour = color(255, 204, 0, item.a * 255);
     }
   }
-  
+
   for(let i = 0; i < stack.length; i++) {
     const item = stack[i];
     let colour;
@@ -495,6 +495,9 @@ function draw() {
     is_jumping = false;
     is_crouching = false;
   }
+  else {
+
+  }
   draw_entity();
 
   draw_stack(stack, 0);
@@ -509,4 +512,17 @@ function draw() {
   line(s.start.x, s.start.y, s.end.x, s.end.y);
   was_jumping = is_jumping;
   was_crouching = is_crouching;
+  if(!focused) {
+    rectMode(CORNER);
+    fill(color(255, 0, 0, 80));
+    rect(0, 0, WIDTH, HEIGHT);
+
+    textStyle(NORMAL);
+    textSize(160);
+    textAlign(CENTER, CENTER);
+    let c = color(0, 0, 0);
+    fill(c);
+    text("PAUSED", 0, 0, WIDTH, HEIGHT);
+    rectMode(CENTER);
+  }
 }
