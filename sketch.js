@@ -72,13 +72,13 @@ function keyPressed() {
   }
   if(keyCode === 32) {
     is_jumping = true;
-  }
+  }/*
   if(keyCode === 65) {
     direction += -1;
   }
   if(keyCode === 68) {
     direction += 1;
-  }
+  }*/
 }
 function keyReleased() {
   if(keyCode === 16) {
@@ -86,13 +86,13 @@ function keyReleased() {
   }
   if(keyCode === 32) {
     is_jumping = false;
-  }
+  }/*
   if(keyCode === 65) {
     direction -= -1;
   }
   if(keyCode === 68) {
     direction -= 1;
-  }
+  }*/
 }
 
 function stack_push(state) {
@@ -354,6 +354,12 @@ function windowResized() {
   resizeCanvas(windowWidth - 30, windowHeight - 30);
   HEIGHT = height;
   WIDTH = width;
+  entity.y = HEIGHT - entity.h;
+  entity.x = GetLeftBound();
+  separator.start.x = GetLeftBound();
+  separator.start.y = 0;
+  separator.end.x = GetLeftBound();
+  separator.end.y = HEIGHT;
 }
 
 function setup() {
@@ -476,7 +482,19 @@ function draw_HUD()
 
 function draw() {
   background(220);
-  
+  direction = 0;
+  if(keyIsDown(65)) {
+    direction += -1;
+  }
+  if(keyIsDown(68)) {
+    direction += 1;
+  }
+
+  if (!focused) {
+    direction = 0;
+    is_jumping = false;
+    is_crouching = false;
+  }
   draw_entity();
 
   draw_stack(stack, 0);
