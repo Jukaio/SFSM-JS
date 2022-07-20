@@ -44,6 +44,9 @@ function easeOutBounce(x) {
 
 function aim() {
   //stroke(color(255, 0, 0));
+  if(!focused) {
+    return;
+  }
   let dirX = mouseX - entity.x;
   let dirY = mouseY - entity.y;
   let length = dirX * dirX + dirY * dirY;
