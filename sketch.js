@@ -19,6 +19,10 @@ let entity = {x: 0, y: 0, w: ENTITY_BASE_WIDTH, h: ENTITY_BASE_HEIGHT, gravity: 
 
 let playTime = 1;
 
+function easeInSine(x) {
+  return 1 - cos((x * PI) / 2);
+}
+
 function easeOutSine(x) {
   return sin((x * PI) / 2);
 }
@@ -542,8 +546,8 @@ function draw() {
     rect(0, 0, (GetLeftBound() / 2), item_height + (DEFAULT_PADDING * 2));
     rect(GetLeftBound() / 2, 0, GetLeftBound() / 2, item_height + (DEFAULT_PADDING * 2));
     fill(c);
-    text("Motion SFSM", 0, DEFAULT_PADDING, (GetLeftBound() / 2), item_height);
-    text("Weapon SFSM", GetLeftBound() / 2, DEFAULT_PADDING, GetLeftBound() / 2, item_height);
+    text("Motion SBSM", 0, DEFAULT_PADDING, (GetLeftBound() / 2), item_height);
+    text("Weapon SBSM", GetLeftBound() / 2, DEFAULT_PADDING, GetLeftBound() / 2, item_height);
     rectMode(CENTER);
   }
 }
