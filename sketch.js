@@ -533,6 +533,7 @@ function draw() {
   stroke(decoration_colour);
   fill(decoration_colour);
   rectMode(CORNER);
+  rect(GetLeftBound(), 0, WIDTH, 0 + ground_height);
   rect(GetLeftBound(), HEIGHT - ground_height, WIDTH, HEIGHT);
   rect(WIDTH - wall_width, 0, WIDTH, HEIGHT);
   textStyle(NORMAL);
