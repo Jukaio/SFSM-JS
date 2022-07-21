@@ -483,14 +483,15 @@ function draw_entity()
   
   const bottom = HEIGHT - (entity.h / 2) - ground_height;
   const right = WIDTH - (e.w / 2) - wall_width;
+  const left = GetLeftBound() + (e.w / 2) + wall_width
   if(e.y > bottom) {
      e.y = bottom;
   }
   if(e.y < bottom) {
     entity.y += ((deltaTime * 200)/ 1000 * playTime) + entity.gravity;
   }
-  if(e.x < GetLeftBound() + e.w / 2) {
-    e.x = GetLeftBound() + e.w / 2;
+  if(e.x < left) {
+    e.x = left;
   }
   if(e.x > right) {
     e.x = right;
@@ -533,9 +534,12 @@ function draw() {
   stroke(decoration_colour);
   fill(decoration_colour);
   rectMode(CORNER);
+
+  rect(GetLeftBound(), 0, wall_width, HEIGHT);
   rect(GetLeftBound(), 0, WIDTH, 0 + ground_height);
   rect(GetLeftBound(), HEIGHT - ground_height, WIDTH, HEIGHT);
   rect(WIDTH - wall_width, 0, WIDTH, HEIGHT);
+
   textStyle(NORMAL);
   const s = separator;  
   strokeWeight(1);
