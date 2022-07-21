@@ -413,6 +413,10 @@ function draw_stack(stack, offset) {
   textStyle(NORMAL);
   textSize(text_size);
   textAlign(CENTER, CENTER);
+  
+  fill(220);
+  rect(offset, 0, item_width, HEIGHT);
+
   for(let i = 0; i < stack.length; i++) {
     const item = stack[i];
     if(item.a < 1) {
