@@ -500,9 +500,7 @@ function draw() {
     is_jumping = false;
     is_crouching = false;
   }
-  else {
 
-  }
   draw_entity();
 
   draw_stack(stack, 0);
@@ -523,13 +521,25 @@ function draw() {
     rect(0, 0, WIDTH, HEIGHT);
 
     textStyle(NORMAL);
-    textSize(120);
+    textSize(96);
     textAlign(CENTER, CENTER);
     let c = color(0, 0, 0);
     fill(c);
     text("CLICK ME!", 0, HEIGHT / 4, WIDTH, HEIGHT - (HEIGHT / 4));
     textSize(32);
     text("A: Left - D: Right\nSpace: Jump - Shift: Crouching\nLMB: Shoot", 0, DEFAULT_PADDING, WIDTH, HEIGHT / 4);
+    rectMode(CENTER);
+  }
+  else {
+    rectMode(CORNER);
+    textSize(28);
+    let c = color(0, 0, 0);
+    fill(220);
+    rect(0, 0, (GetLeftBound() / 2), item_height + (DEFAULT_PADDING * 2));
+    rect(GetLeftBound() / 2, 0, GetLeftBound() / 2, item_height + (DEFAULT_PADDING * 2));
+    fill(c);
+    text("Motion SFSM", 0, DEFAULT_PADDING, (GetLeftBound() / 2), item_height);
+    text("Weapon SFSM", GetLeftBound() / 2, DEFAULT_PADDING, GetLeftBound() / 2, item_height);
     rectMode(CENTER);
   }
 }
