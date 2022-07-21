@@ -11,7 +11,8 @@ let decoration_colour = 0;
 let target_colour = 0;
 let active_state_colour = 0;
 let inactive_state_colour = 0;
-
+const ground_height = 2;
+const wall_width = 2;
 const hud_height = 55;
 const hud_width = 200;
 const text_size = 14;
@@ -480,18 +481,19 @@ function draw_entity()
   fill(soft_text_colour);
   rect(e.x, e.y, e.w, e.h, 15);
   
-  const bottom = HEIGHT - (entity.h / 2);
+  const bottom = HEIGHT - (entity.h / 2) - ground_height;
+  const right = WIDTH - (e.w / 2) - wall_width;
   if(e.y > bottom) {
-    e.y = bottom;
+     e.y = bottom;
   }
-  if(e.y < HEIGHT - entity.h / 2) {
+  if(e.y < bottom) {
     entity.y += ((deltaTime * 200)/ 1000 * playTime) + entity.gravity;
   }
   if(e.x < GetLeftBound() + e.w / 2) {
     e.x = GetLeftBound() + e.w / 2;
   }
-  if(e.x > WIDTH - e.w / 2) {
-    e.x = WIDTH - e.w / 2;
+  if(e.x > right) {
+    e.x = right;
   }
 }
 
@@ -522,11 +524,22 @@ function draw() {
     fill(bullet_colour);
     circle(bullet.x, bullet.y, bullet.r);
   }
+
+
+
   //draw_HUD();
   //camera(0, 0);
+  strokeWeight(0);
   stroke(decoration_colour);
-  const s = separator;
+  fill(decoration_colour);
+  rectMode(CORNER);
+  rect(GetLeftBound(), HEIGHT - ground_height, WIDTH, HEIGHT);
+  rect(WIDTH - wall_width, 0, WIDTH, HEIGHT);
+  textStyle(NORMAL);
+  const s = separator;  
+  strokeWeight(1);
   //line(s.start.x, s.start.y, s.end.x, s.end.y);
+
   was_jumping = is_jumping;
   was_crouching = is_crouching;
   if(!focused) {
