@@ -529,7 +529,7 @@ function draw() {
     fill(c);
     text("CLICK ME!", 0, HEIGHT / 4, WIDTH, HEIGHT - (HEIGHT / 4));
     textSize(32);
-    text("A: Left - D: Right\nSpace: Jump\nLMB: Shoot", 0, DEFAULT_PADDING, WIDTH, HEIGHT / 4);
+    text("A: Left - D: Right\nSpace: Jump - Shift: Crouching\nLMB: Shoot", 0, DEFAULT_PADDING, WIDTH, HEIGHT / 4);
     rectMode(CENTER);
   }
 }
