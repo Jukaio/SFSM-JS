@@ -1,8 +1,17 @@
+
 let HEIGHT = 600;
 let WIDTH = 800;
 let DEFAULT_PADDING = 20;
 let item_height = 60;
 let item_width = 140;
+let bullet_colour = 0;
+let background_colour = 0;
+let soft_text_colour = 0;
+let decoration_colour = 0;
+let target_colour = 0;
+let active_state_colour = 0;
+let inactive_state_colour = 0;
+
 const hud_height = 55;
 const hud_width = 200;
 const text_size = 14;
@@ -63,6 +72,7 @@ function aim() {
     dirX *= 500;
     dirY *= 500;
   }
+  stroke(target_colour);
   line(entity.x, entity.y, entity.x + dirX, entity.y + dirY);
   //stroke(color(0, 0, 0));
 }
@@ -376,7 +386,13 @@ function setup() {
   HEIGHT = height;
   WIDTH = width;
 
-  
+  background_colour = color(41, 43, 47, 255);
+  bullet_colour = color(255, 242, 156, 255);
+  soft_text_colour = color(211, 191, 215, 255);
+  decoration_colour = color(127, 90, 136, 255);
+  target_colour = color(149, 245, 172, 255);
+  inactive_state_colour = color(255, 242, 156, 255);
+  active_state_colour = color(149, 245, 172, 255);
   //strokeWeight(2);
   stack_push(idle);
   weapon_push(weaponDefaultState);
@@ -399,16 +415,17 @@ function draw_stack_item(item, index, offset) {
   const height = item_height;
   const width = item_width;
   const x = offset;
-  const y = HEIGHT - (index * height) - height;
   
   let a = easeOutBounce(item.a);
-  
+  const y = (HEIGHT - (index * height) - height) * a;
+
+  stroke(red(item.colour) / 2, green(item.colour) / 2, blue(item.colour) / 2, alpha(item.colour));
   fill(item.colour);
-  rect(x, y * a, item_width, item_height, 15);
-  
-  let c = color(0, 0, 0);
-  fill(c);
-  text(item.title, x, y * a, item_width, item_height);
+  rect(x, y, item_width, item_height, 15);
+  stroke(0, 0);
+
+  fill(background_colour);
+  text(item.title, x, y, item_width, item_height);
 }
 
 function draw_stack(stack, offset) {
@@ -418,7 +435,8 @@ function draw_stack(stack, offset) {
   textSize(text_size);
   textAlign(CENTER, CENTER);
   
-  fill(220);
+  fill(background_colour);
+  stroke(decoration_colour);
   rect(offset, 0, item_width, HEIGHT);
 
   for(let i = 0; i < stack.length; i++) {
@@ -430,22 +448,15 @@ function draw_stack(stack, offset) {
       item.a = 1;
     }
     if(i == stack.length - 1) {
-      item.colour = color(100, 204, 0, item.a * 255);
+      item.colour = color(red(active_state_colour), green(active_state_colour), blue(active_state_colour), item.a * 255);
     }
     else {
-      item.colour = color(255, 204, 0, item.a * 255);
+      item.colour = color(red(inactive_state_colour), green(inactive_state_colour), blue(inactive_state_colour), item.a * 255);
     }
   }
 
   for(let i = 0; i < stack.length; i++) {
     const item = stack[i];
-    let colour;
-    if(i == stack.length - 1) {
-      colour = color(100, 204, 0);
-    }
-    else {
-      colour = color(255, 204, 0);
-    }
     draw_stack_item(item, i, offset);
   }
 }
@@ -465,12 +476,13 @@ function draw_entity()
       weapon_pop();
     }
   }
-  
-  fill(color(0, 0, 0));
+  stroke(decoration_colour);
+  fill(soft_text_colour);
   rect(e.x, e.y, e.w, e.h, 15);
   
-  if(e.y > HEIGHT - entity.h / 2) {
-    e.y = HEIGHT - entity.h / 2;
+  const bottom = HEIGHT - (entity.h / 2);
+  if(e.y > bottom) {
+    e.y = bottom;
   }
   if(e.y < HEIGHT - entity.h / 2) {
     entity.y += ((deltaTime * 200)/ 1000 * playTime) + entity.gravity;
@@ -483,18 +495,9 @@ function draw_entity()
   }
 }
 
-function draw_HUD()
-{
-  textSize(16);
-  textAlign(LEFT, CENTER);
-  fill(color(0, 0, 0, 0));
-  rect(WIDTH - (hud_width / 2), DEFAULT_PADDING, (hud_width / 2) - DEFAULT_PADDING, hud_height, 15);
-  fill(color(0, 0, 0));
-  text("Move", WIDTH - hud_width, DEFAULT_PADDING, hud_width / 2, hud_height);
-}
-
 function draw() {
-  background(220);
+  
+  background(background_colour);
   direction = 0;
   if(keyIsDown(65)) {
     direction += -1;
@@ -512,27 +515,29 @@ function draw() {
   draw_entity();
 
   draw_stack(stack, 0);
-  draw_stack(weaponStack, item_width);
+  draw_stack(weaponStack, 0 + item_width);
   
   if(bullet.active) {
+    stroke(red(bullet_colour) / 2, green(bullet_colour) / 2, blue(bullet_colour) / 2, alpha(bullet_colour));
+    fill(bullet_colour);
     circle(bullet.x, bullet.y, bullet.r);
   }
   //draw_HUD();
   //camera(0, 0);
+  stroke(decoration_colour);
   const s = separator;
-  line(s.start.x, s.start.y, s.end.x, s.end.y);
+  //line(s.start.x, s.start.y, s.end.x, s.end.y);
   was_jumping = is_jumping;
   was_crouching = is_crouching;
   if(!focused) {
     rectMode(CORNER);
-    fill(color(255, 0, 0, 80));
+    fill(background_colour);
     rect(0, 0, WIDTH, HEIGHT);
-
+    stroke(decoration_colour);
     textStyle(NORMAL);
     textSize(96);
     textAlign(CENTER, CENTER);
-    let c = color(0, 0, 0);
-    fill(c);
+    fill(soft_text_colour);
     text("CLICK ME!", 0, HEIGHT / 4, WIDTH, HEIGHT - (HEIGHT / 4));
     textSize(32);
     text("A: Left - D: Right\nSpace: Jump - Shift: Crouching\nLMB: Shoot", 0, DEFAULT_PADDING, WIDTH, HEIGHT / 4);
@@ -541,13 +546,22 @@ function draw() {
   else {
     rectMode(CORNER);
     textSize(28);
-    let c = color(0, 0, 0);
-    fill(220);
+    stroke(decoration_colour);
+    fill(background_colour);
     rect(0, 0, (GetLeftBound() / 2), item_height + (DEFAULT_PADDING * 2));
-    rect(GetLeftBound() / 2, 0, GetLeftBound() / 2, item_height + (DEFAULT_PADDING * 2));
-    fill(c);
+    rect(0 + (GetLeftBound() / 2), 0, GetLeftBound() / 2, item_height + (DEFAULT_PADDING * 2));
+    fill(soft_text_colour);
     text("Motion SBSM", 0, DEFAULT_PADDING, (GetLeftBound() / 2), item_height);
-    text("Weapon SBSM", GetLeftBound() / 2, DEFAULT_PADDING, GetLeftBound() / 2, item_height);
+    text("Weapon SBSM", 0 + (GetLeftBound() / 2), DEFAULT_PADDING, GetLeftBound() / 2, item_height);
     rectMode(CENTER);
   }
+  // Let's draw a border...
+  /*
+  rectMode(CORNER);
+  fill(0, 0, 0, 0);
+  strokeWeight(STROKE_WEIGHT_BORDER);
+  stroke(decoration_colour);
+  rect(0, 0, WIDTH, HEIGHT);
+  strokeWeight(1);
+  rectMode(CENTER);*/
 }
