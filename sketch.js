@@ -172,9 +172,11 @@ function do_jumping() {
   if(!isJumpJustPushed) {
     return false;
   }
-  entity.y -= jump_t * 14 * playTime;
   entity.x += direction * (deltaTime / 1000) * 100 * playTime;
-  jump_t += (deltaTime / 1000) * 1.5 * playTime;
+
+  entity.y -= easeOutSine((1 - jump_t)) * 16 * playTime;
+  jump_t += (deltaTime / 1000) * 1.25 * playTime;
+
   if(jump_t > 1) {
     isJumpJustPushed = false;
     isAirJustPushed = true;
