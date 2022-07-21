@@ -11,8 +11,8 @@ let decoration_colour = 0;
 let target_colour = 0;
 let active_state_colour = 0;
 let inactive_state_colour = 0;
-const ground_height = 2;
-const wall_width = 2;
+const ground_height = 1.25;
+const wall_width = 1.25;
 const hud_height = 55;
 const hud_width = 200;
 const text_size = 14;
@@ -535,10 +535,10 @@ function draw() {
   fill(decoration_colour);
   rectMode(CORNER);
 
-  rect(GetLeftBound(), 0, wall_width, HEIGHT);
-  rect(GetLeftBound(), 0, WIDTH, 0 + ground_height);
-  rect(GetLeftBound(), HEIGHT - ground_height, WIDTH, HEIGHT);
-  rect(WIDTH - wall_width, 0, WIDTH, HEIGHT);
+  //rect(GetLeftBound(), 0, wall_width, HEIGHT);
+  rect(GetLeftBound(), 0, WIDTH, ground_height);
+  rect(GetLeftBound(), HEIGHT - ground_height, WIDTH, ground_height);
+  rect(WIDTH - wall_width, 0, wall_width, HEIGHT);
 
   textStyle(NORMAL);
   const s = separator;  
