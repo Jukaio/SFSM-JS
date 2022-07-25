@@ -1,8 +1,13 @@
-html, body {
-  margin: 50;
-  padding: 50;
-  
+html, body, main {
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+  height: 100%;
 }
 canvas {
   display: block;
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+  height: 100%;
 }
