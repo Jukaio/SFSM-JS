@@ -450,10 +450,10 @@ function setup() {
   const high_note_names = ["C6", "G6", "F6", "E6", "G6", "A6", "F6", "E6"];
   const low_note_names = ["C5", "D5", "F5", "E5", "C5", "F5", "D5", "G5"];
   for(let i = 0; i < NOTE_COUNT; i++) {
-    harp_sounds.push(loadSound("Sounds/Harp/"+ low_note_names[i] + "_Harp"));
-    pan_sounds.push(loadSound("Sounds/Pan/"+ low_note_names[i] + "_Handpan"));
-    flute_sounds.push(loadSound("Sounds/Flute/"+ high_note_names[i] + "_Flute"));
-    high_harp_sounds.push(loadSound("Sounds/Harp/"+ high_note_names[i] + "_Harp"));
+    harp_sounds.push(loadSound("Harp/"+ low_note_names[i] + "_Harp"));
+    pan_sounds.push(loadSound("Pan/"+ low_note_names[i] + "_Handpan"));
+    flute_sounds.push(loadSound("Flute/"+ high_note_names[i] + "_Flute"));
+    high_harp_sounds.push(loadSound("Harp/"+ high_note_names[i] + "_Harp"));
   }
 
   for(let i = 0; i < NODE_COUNT; i++) {
