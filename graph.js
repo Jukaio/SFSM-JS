@@ -432,8 +432,8 @@ function windowResized() {
   const half_padding = (100-fraction) / 2;
   canvas.style('width', fraction+'%');
   canvas.style('height', '100%');
-  canvas.style('padding-left', half_padding+'%');
-  canvas.style('padding-right', half_padding+'%');
+  canvas.style('margin-left', half_padding+'%');
+  canvas.style('margin-right', half_padding+'%');
   flush_entities();
   setup_entities();
 }
@@ -480,8 +480,8 @@ function setup() {
   const fraction = (width / windowWidth) * 100;
   const half_padding = (100-fraction) / 2;
   canvas.style('width', fraction+'%');
-  canvas.style('padding-left', half_padding+'%');
-  canvas.style('padding-right', half_padding+'%');
+  canvas.style('margin-left', half_padding+'%');
+  canvas.style('margin-right', half_padding+'%');
   canvas.style('height', '100%');
 
   setup_entities();
