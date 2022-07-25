@@ -425,11 +425,15 @@ function draw_buttons() {
 let canvas;
 function windowResized() {
   const space = windowHeight > windowWidth ? windowWidth : windowHeight;
-  const removedArea = space / row_count;
-  resizeCanvas((space - removedArea * limit) - DEFAULT_PADDING / 2, space - DEFAULT_PADDING);
+  const removedArea = windowHeight / row_count;
+  resizeCanvas(removedArea * limit, windowHeight);
   //DEBUG_AREA_START = (height * DEBUG_AREA_SIZE) + DEFAULT_PADDING;
-  canvas.style('width', '100%');
+  const fraction = (width / windowWidth) * 100;
+  const half_padding = (100-fraction) / 2;
+  canvas.style('width', fraction+'%');
   canvas.style('height', '100%');
+  canvas.style('padding-left', half_padding+'%');
+  canvas.style('padding-right', half_padding+'%');
   flush_entities();
   setup_entities();
 }
@@ -471,9 +475,13 @@ function setup() {
   }
   //sound.play();
   const space = windowHeight > windowWidth ? windowWidth : windowHeight;
-  const removedArea = space / row_count;
-  canvas = createCanvas((space - removedArea * limit) - DEFAULT_PADDING / 2, space - DEFAULT_PADDING);
-  canvas.style('width', '100%');
+  const removedArea = windowHeight / row_count;
+  canvas = createCanvas((removedArea * limit), windowHeight);
+  const fraction = (width / windowWidth) * 100;
+  const half_padding = (100-fraction) / 2;
+  canvas.style('width', fraction+'%');
+  canvas.style('padding-left', half_padding+'%');
+  canvas.style('padding-right', half_padding+'%');
   canvas.style('height', '100%');
 
   setup_entities();
