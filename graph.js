@@ -433,7 +433,7 @@ function windowResized() {
 }
 
 function preload() {
-  soundFormats( 'WAV');
+  soundFormats( 'wav');
 }
 
 function setup() {
