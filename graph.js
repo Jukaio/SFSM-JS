@@ -422,13 +422,14 @@ function draw_buttons() {
 
 }
 
-
+let canvas;
 function windowResized() {
   const space = windowHeight > windowWidth ? windowWidth : windowHeight;
   const removedArea = space / row_count;
   resizeCanvas((space - removedArea * limit) - DEFAULT_PADDING / 2, space - DEFAULT_PADDING);
   //DEBUG_AREA_START = (height * DEBUG_AREA_SIZE) + DEFAULT_PADDING;
-
+  canvas.style('width', '100%');
+  canvas.style('height', '100%');
   flush_entities();
   setup_entities();
 }
@@ -471,8 +472,9 @@ function setup() {
   //sound.play();
   const space = windowHeight > windowWidth ? windowWidth : windowHeight;
   const removedArea = space / row_count;
-  createCanvas((space - removedArea * limit) - DEFAULT_PADDING / 2, space - DEFAULT_PADDING);
-
+  canvas = createCanvas((space - removedArea * limit) - DEFAULT_PADDING / 2, space - DEFAULT_PADDING);
+  canvas.style('width', '100%');
+  canvas.style('height', '100%');
 
   setup_entities();
 
