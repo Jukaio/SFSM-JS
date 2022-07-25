@@ -16,7 +16,7 @@ let peach_colour;
 let grass_colour;
 let sky_colour;
 
-const text_size = 14;
+const text_size = 12;
 
 const playTime = 1;
 
@@ -31,7 +31,7 @@ let node_components = [];
 let colour_components = [];
 
 function get_node_space_size() {
-  return width / row_count;
+  return height / row_count;
 }
 function get_node_padding() {
   const space = get_node_space_size();
@@ -425,8 +425,9 @@ function draw_buttons() {
 
 function windowResized() {
   const space = windowHeight > windowWidth ? windowWidth : windowHeight;
-  resizeCanvas(space - DEFAULT_PADDING, space - DEFAULT_PADDING);
-  DEBUG_AREA_START = (height * DEBUG_AREA_SIZE) + DEFAULT_PADDING;
+  const removedArea = space / row_count;
+  resizeCanvas((space - removedArea * limit) - DEFAULT_PADDING / 2, space - DEFAULT_PADDING);
+  //DEBUG_AREA_START = (height * DEBUG_AREA_SIZE) + DEFAULT_PADDING;
 
   flush_entities();
   setup_entities();
@@ -469,8 +470,10 @@ function setup() {
   }
   //sound.play();
   const space = windowHeight > windowWidth ? windowWidth : windowHeight;
-  createCanvas(space - DEFAULT_PADDING, space - DEFAULT_PADDING);
-  DEBUG_AREA_START = (height * DEBUG_AREA_SIZE) + DEFAULT_PADDING;
+  const removedArea = space / row_count;
+  createCanvas((space - removedArea * limit) - DEFAULT_PADDING / 2, space - DEFAULT_PADDING);
+
+
   setup_entities();
 
 }
