@@ -130,16 +130,28 @@ function draw_uniform_button(x, y, colour, title) {
   rectMode(CORNER); 
 }
 
-function on_node_changed()
-{
-  const node = current_node;
-  try_play_sound(node);
-}
-
 const JUMP = 0;
 const LAND = 1;
 const DOUBLE_JUMP = 2;
 const BOUNCE = 3;
+
+let lastPlayed = -1;
+function on_node_changed()
+{
+  const node = current_node;
+  if(lastPlayed !== node) {
+    lastPlayed = node;
+    try_play_sound(node);
+  }
+}
+
+function mouseClicked() {
+  const node = node_components[current_node];
+  const size = get_node_size();
+  if(is_mouse_hovering_button(node.x - size / 2, node.y - size / 2, size, size)) {
+    on_node_changed();
+  }
+}
 
 function draw_node(index) {
   rectMode(CENTER);
@@ -155,7 +167,6 @@ function draw_node(index) {
     if(mouseIsPressed && !wasMousePressed) {
       colour = color(255, 255, 255, 255);
       current_node = index;
-      on_node_changed();
     }
     else {
       colour = active_state_colour;
@@ -295,19 +306,19 @@ function setup_entities() {
 
   for(let ix = 0; ix < row_count; ix += 1) {
     const index = ctoi(ix, 0);
-    set_sound(index, harp_sounds[ix], 1.25, 1);
+    set_sound(index, harp_sounds[ix], 1.35, 1);
   }
   for(let ix = 0; ix < row_count; ix += 1) {
     const index = ctoi(ix, 1);
-    set_sound(index, pan_sounds[ix], 0.35, 1);
+    set_sound(index, pan_sounds[ix], 0.45, 1);
   }
   for(let ix = 0; ix < row_count; ix += 1) {
     const index = ctoi(ix, 2);
-    set_sound(index, high_harp_sounds[ix], 1.25, 1);
+    set_sound(index, high_harp_sounds[ix], 1.35, 1);
   }
   for(let ix = 0; ix < row_count; ix += 1) {
     const index = ctoi(ix, 3);
-    set_sound(index, flute_sounds[ix], 0.25, 1);
+    set_sound(index, flute_sounds[ix], 0.30, 1);
   }
   current_node = ctoi(0, 1);
 }
@@ -590,6 +601,7 @@ function draw() {
   for(let i = 0; i < entities.length; i++) {
     draw_node(entities[i]);
   }
+
   fill(soft_text_colour);
   pop();
   wasMousePressed = mouseIsPressed;
