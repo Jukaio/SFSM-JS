@@ -5,7 +5,7 @@ let DEFAULT_PADDING = 20;
 
 let item_height = 36;
 let item_width = 140;
-
+let is_interacting_with_onscreen_buttons = false;
 
 let bullet_colour = 0;
 let background_colour = 0;
@@ -101,12 +101,14 @@ function keyPressed() {
     direction += 1;
   }*/
 }
+
+
 function keyReleased() {
   if(keyCode === 16) {
-    is_crouching = false;
+    //is_crouching = false;
   }
   if(keyCode === 32) {
-    is_jumping = false;
+    //is_jumping = false;
   }/*
   if(keyCode === 65) {
     direction -= -1;
@@ -271,7 +273,7 @@ function do_aiming() {
 function do_actual_aiming() {
   aim();
   if(can_shoot()) {
-    if (mouseIsPressed === true) {
+    if (!is_interacting_with_onscreen_buttons && mouseIsPressed === true) {
       shootTimer = 0;
       weapon_push(weaponShootState);
       return true;
@@ -414,10 +416,6 @@ function setup() {
   separator.start.y = 0;
   separator.end.x = GetLeftBound();
   separator.end.y = HEIGHT;
-  
-  stackObserver = (state) => {
-    
-  }
 }
 
 function draw_stack_item(item, index, offset) {
@@ -505,6 +503,19 @@ function draw_entity()
   }
 }
 
+function is_hovering(x, y, w, h)
+{
+  const mx = mouseX;
+  const my = mouseY;
+  const half_width = w / 2;
+  const half_height = h / 2;
+  const left = x - half_width;
+  const right = x + half_width;
+  const top = y - half_height;
+  const bottom = y + half_height;
+  return mx >= left && mx <= right && my >= top && my <= bottom; 
+}
+
 function draw() {
   
   background(background_colour);
@@ -521,8 +532,51 @@ function draw() {
     is_jumping = false;
     is_crouching = false;
   }
+  is_interacting_with_onscreen_buttons = false;
+  function handle_input_button(label, index, height_index, callback)
+  {
+    push();
+    textAlign(CENTER, CENTER);
+    rectMode(CENTER);
+    stroke(0, 0);
+    const padding = width * 0.025;
+    const button_size = width * 0.15;
+    const bx = (button_size / 2) + padding + ((padding + button_size) * index);
+    const by = height - (height / 6) - ((padding + button_size) * height_index);
+    const min = 125;
+    let fraction = button_size / min;  
+    let title_size = 32;
+    if(fraction > 1.0) {
+      fraction = 1.0;
+    }
+    textSize(title_size * fraction);
 
-  
+    if(is_hovering(bx, by, button_size, button_size)) {
+      if(mouseIsPressed === true) {
+        const colour = active_state_colour;
+        fill(red(colour), green(colour), blue(colour), 255);
+        is_interacting_with_onscreen_buttons = true;
+        callback();
+      }
+      else {
+        const colour = inactive_state_colour;
+        fill(red(colour), green(colour), blue(colour), 255);
+      }
+    }
+    else {
+      const colour = inactive_state_colour;
+      fill(red(colour), green(colour), blue(colour), 64);
+    }
+    rect(bx, by, button_size, button_size, 20);
+    fill(background_colour);
+    text(label, bx, by, button_size, button_size);
+    pop();
+  }
+  handle_input_button("A", 0, 0, () => { direction = -1; });
+  handle_input_button("Jump", 4.5, 0.75, () => { is_jumping = true; });
+  handle_input_button("Crouch", 3.75, -0.25, () => { is_crouching = true; });
+  handle_input_button("D", 1, 0, () => { direction = 1; });
+
   draw_stack(stack, 0);
   draw_stack(weaponStack, 0 + width / 2);
   
@@ -545,13 +599,15 @@ function draw() {
 
   was_jumping = is_jumping;
   was_crouching = is_crouching;
+  is_jumping = false;
+  is_crouching = false;
   if(!focused) {
     rectMode(CORNER);
     fill(background_colour);
     rect(0, 0, WIDTH, HEIGHT);
     stroke(decoration_colour);
     textStyle(NORMAL);
-    textSize(96);
+    textSize(62);
     textAlign(CENTER, CENTER);
     fill(soft_text_colour);
     text("CLICK ME!", 0, HEIGHT / 2, WIDTH, HEIGHT - (HEIGHT / 2));
@@ -580,6 +636,7 @@ function draw() {
     text("Weapon SBSM", 0 + (width / 2), 0, (width / 2), item_height);
     rectMode(CENTER);
   }
+
 
   strokeWeight(0.5);
   stroke(decoration_colour);
