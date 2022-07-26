@@ -89,10 +89,10 @@ let is_jumping = false;
 function keyPressed() {
   //print(key, ' ', keyCode);
   if(keyCode === 16) {
-    is_crouching = true;
+    //is_crouching = true;
   }
   if(keyCode === 32) {
-    is_jumping = true;
+    //is_jumping = true;
   }/*
   if(keyCode === 65) {
     direction += -1;
@@ -213,7 +213,7 @@ function do_airborne() {
     return false;
   }
   entity.x += direction * (deltaTime / 1000) * 100 * playTime;
-  if(entity.y < HEIGHT - entity.h / 2) {
+  if(entity.y < HEIGHT - entity.h) {
     entity.y += (deltaTime * 100)/ 1000 * playTime;
     return true;
   }
@@ -538,23 +538,33 @@ function draw() {
   if(keyIsDown(68)) {
     direction += 1;
   }
-
+  if(keyIsDown(16)) {
+    is_crouching = true;
+  }
+  if(keyIsDown(32)) {
+    is_jumping = true;
+  }
   if (!focused) {
     direction = 0;
     is_jumping = false;
     is_crouching = false;
   }
   is_interacting_with_onscreen_buttons = false;
-  function handle_input_button(is_once_button, label, index, height_index, callback)
+  function handle_input_button(is_once_button, is_left_aligned, is_bottom_aligned, label, index, height_index, callback)
   {
     push();
     textAlign(CENTER, CENTER);
     rectMode(CENTER);
     stroke(0, 0);
-    const padding = width * 0.025;
-    const button_size = width * 0.15;
-    const bx = (button_size / 2) + padding + ((padding + button_size) * index);
-    const by = height - (height / 6) - ((padding + button_size) * height_index);
+    const size = height < width ? height : width;
+    const padding = size * 0.025;
+    const button_size = size * 0.15;
+    const bx = is_left_aligned 
+      ? (button_size / 2) + padding + ((padding + button_size) * index)
+      : width - ((button_size / 2) + padding + ((padding + button_size) * index));
+    const by = is_bottom_aligned 
+      ? height - (height / 6) - ((padding + button_size) * height_index)
+      : (height / 2) + ((padding + button_size) * height_index) + (button_size / 2) + padding;
     const min = 125;
     let fraction = button_size / min;  
     let title_size = 32;
@@ -579,19 +589,19 @@ function draw() {
       const colour = inactive_state_colour;
       fill(red(colour), green(colour), blue(colour), 64);
     }
-    rect(bx, by, button_size, button_size, 20);
+    rect(bx, by, button_size, button_size, button_size * 0.30);
     fill(background_colour);
     text(label, bx, by, button_size, button_size);
     pop();
   }
   if(on_screen_controls) {
-    handle_input_button(false, "A", 0, 0, () => { direction = -1; });
-    handle_input_button(false, "Jump", 4.5, 0.75, () => { is_jumping = true; });
-    handle_input_button(false, "Crouch", 3.75, -0.25, () => { is_crouching = true; });
-    handle_input_button(false, "D", 1, 0, () => { direction = 1; });
+    handle_input_button(false, true, true, "A", 0, 0, () => { direction = -1; });
+    handle_input_button(false, false, true, "Jump", 0, 0.75, () => { is_jumping = true; });
+    handle_input_button(false, false, true, "Crouch", 0.75, -0.25, () => { is_crouching = true; });
+    handle_input_button(false, true, true, "D", 1, 0, () => { direction = 1; });
   }
   //Fix this button position!
-  handle_input_button(true, "Screen Controls", 0, 2, () => { on_screen_controls = !on_screen_controls; });
+  handle_input_button(true, true, false, "Screen Controls", 0, 0, () => { on_screen_controls = !on_screen_controls; });
 
   draw_stack(stack, 0);
   draw_stack(weaponStack, 0 + width / 2);
