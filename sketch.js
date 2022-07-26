@@ -86,37 +86,8 @@ let was_crouching = false;
 let is_crouching = false;
 let was_jumping = false;
 let is_jumping = false;
-function keyPressed() {
-  //print(key, ' ', keyCode);
-  if(keyCode === 16) {
-    //is_crouching = true;
-  }
-  if(keyCode === 32) {
-    //is_jumping = true;
-  }/*
-  if(keyCode === 65) {
-    direction += -1;
-  }
-  if(keyCode === 68) {
-    direction += 1;
-  }*/
-}
 
 
-function keyReleased() {
-  if(keyCode === 16) {
-    //is_crouching = false;
-  }
-  if(keyCode === 32) {
-    //is_jumping = false;
-  }/*
-  if(keyCode === 65) {
-    direction -= -1;
-  }
-  if(keyCode === 68) {
-    direction -= 1;
-  }*/
-}
 
 function stack_push(state) {
   if(stack.length > 0) {
@@ -525,7 +496,7 @@ function is_hovering(x, y, w, h)
   }
   return false;
 }
-
+let screen_button_time_point = 0;
 let on_screen_controls = true;
 let wasMousePressed = false;
 function draw() {
@@ -550,7 +521,7 @@ function draw() {
     is_crouching = false;
   }
   is_interacting_with_onscreen_buttons = false;
-  function handle_input_button(is_once_button, is_left_aligned, is_bottom_aligned, label, index, height_index, callback)
+  function handle_input_button(is_left_aligned, is_bottom_aligned, label, index, height_index, callback)
   {
     push();
     textAlign(CENTER, CENTER);
@@ -574,7 +545,7 @@ function draw() {
     textSize(title_size * fraction);
 
     if(is_hovering(bx, by, button_size, button_size)) {
-      if(mouseIsPressed === true && (!is_once_button || wasMousePressed === false)) {
+      if(mouseIsPressed === true) {
         const colour = active_state_colour;
         fill(red(colour), green(colour), blue(colour), 255);
         is_interacting_with_onscreen_buttons = true;
@@ -595,13 +566,19 @@ function draw() {
     pop();
   }
   if(on_screen_controls) {
-    handle_input_button(false, true, true, "A", 0, 0, () => { direction = -1; });
-    handle_input_button(false, false, true, "Jump", 0, 0.75, () => { is_jumping = true; });
-    handle_input_button(false, false, true, "Crouch", 0.75, -0.25, () => { is_crouching = true; });
-    handle_input_button(false, true, true, "D", 1, 0, () => { direction = 1; });
+    handle_input_button(true, true, "A", 0, 0, () => { direction = -1; });
+    handle_input_button(false, true, "Jump", 0, 0.75, () => { is_jumping = true; });
+    handle_input_button(false, true, "Crouch", 0.75, -0.25, () => { is_crouching = true; });
+    handle_input_button(true, true, "D", 1, 0, () => { direction = 1; });
   }
   //Fix this button position!
-  handle_input_button(true, true, false, "Screen Controls", 0, 0, () => { on_screen_controls = !on_screen_controls; });
+  handle_input_button(true, false, "Screen Controls", 0, 0, () => 
+  {
+    if((screen_button_time_point + 250) < millis()) {
+      screen_button_time_point = millis();
+      on_screen_controls = !on_screen_controls; 
+    }
+  });
 
   draw_stack(stack, 0);
   draw_stack(weaponStack, 0 + width / 2);
