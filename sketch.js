@@ -2,8 +2,11 @@
 let HEIGHT = 600;
 let WIDTH = 800;
 let DEFAULT_PADDING = 20;
-let item_height = 60;
+
+let item_height = 36;
 let item_width = 140;
+
+
 let bullet_colour = 0;
 let background_colour = 0;
 let soft_text_colour = 0;
@@ -370,8 +373,11 @@ const crouching =
   a: 1
 };
 
+let canvas;
 function windowResized() {
-  resizeCanvas(windowWidth - 30, windowHeight - 30);
+  resizeCanvas(windowWidth, windowHeight);
+  canvas.style('width', '100%');
+  canvas.style('height', '100%');
   HEIGHT = height;
   WIDTH = width;
   entity.y = HEIGHT - entity.h;
@@ -383,7 +389,9 @@ function windowResized() {
 }
 
 function setup() {
-  createCanvas(windowWidth - 30, windowHeight - 30);
+  canvas = createCanvas(windowWidth, windowHeight);
+  canvas.style('width', '100%');
+  canvas.style('height', '100%');
   HEIGHT = height;
   WIDTH = width;
 
@@ -414,19 +422,18 @@ function setup() {
 
 function draw_stack_item(item, index, offset) {
   const height = item_height;
-  const width = item_width;
   const x = offset;
-  
+  const element_width = (width / 2);
   let a = easeOutBounce(item.a);
-  const y = (HEIGHT - (index * height) - height) * a;
+  const y = ((HEIGHT / 2) - (index * height) - height) * a;
 
   stroke(red(item.colour) / 2, green(item.colour) / 2, blue(item.colour) / 2, alpha(item.colour));
   fill(item.colour);
-  rect(x, y, item_width, item_height, 15);
+  rect(x, y, element_width, item_height, 15);
   stroke(0, 0);
 
   fill(background_colour);
-  text(item.title, x, y, item_width, item_height);
+  text(item.title, x, y, element_width, item_height);
 }
 
 function draw_stack(stack, offset) {
@@ -438,7 +445,7 @@ function draw_stack(stack, offset) {
   
   fill(background_colour);
   stroke(decoration_colour);
-  rect(offset, 0, item_width, HEIGHT);
+  rect(offset, 0, (width / 2), height / 2);
 
   for(let i = 0; i < stack.length; i++) {
     const item = stack[i];
@@ -483,7 +490,7 @@ function draw_entity()
   
   const bottom = HEIGHT - (entity.h / 2) - ground_height;
   const right = WIDTH - (e.w / 2) - wall_width;
-  const left = GetLeftBound() + (e.w / 2) + wall_width
+  const left = 0 + (e.w / 2) + wall_width
   if(e.y > bottom) {
      e.y = bottom;
   }
@@ -518,7 +525,7 @@ function draw() {
   draw_entity();
 
   draw_stack(stack, 0);
-  draw_stack(weaponStack, 0 + item_width);
+  draw_stack(weaponStack, 0 + width / 2);
   
   if(bullet.active) {
     stroke(red(bullet_colour) / 2, green(bullet_colour) / 2, blue(bullet_colour) / 2, alpha(bullet_colour));
@@ -534,11 +541,6 @@ function draw() {
   stroke(decoration_colour);
   fill(decoration_colour);
   rectMode(CORNER);
-
-  //rect(GetLeftBound(), 0, wall_width, HEIGHT);
-  rect(GetLeftBound(), 0, WIDTH, ground_height);
-  rect(GetLeftBound(), HEIGHT - ground_height, WIDTH, ground_height);
-  rect(WIDTH - wall_width, 0, wall_width, HEIGHT);
 
   textStyle(NORMAL);
   const s = separator;  
@@ -556,23 +558,49 @@ function draw() {
     textSize(96);
     textAlign(CENTER, CENTER);
     fill(soft_text_colour);
-    text("CLICK ME!", 0, HEIGHT / 4, WIDTH, HEIGHT - (HEIGHT / 4));
+    text("CLICK ME!", 0, HEIGHT / 2, WIDTH, HEIGHT - (HEIGHT / 2));
     textSize(32);
-    text("A: Left - D: Right\nSpace: Jump - Shift: Crouching\nLMB: Shoot", 0, DEFAULT_PADDING, WIDTH, HEIGHT / 4);
+    text("A: Left - D: Right\nSpace: Jump - Shift: Crouching\nLMB: Shoot", 0, 0, WIDTH, HEIGHT / 2);
     rectMode(CENTER);
   }
   else {
     rectMode(CORNER);
-    textSize(28);
+    const min = 200;
+    let fraction = (width / 2) / min;  
+    let title_size = 26;
+    if(fraction > 1.0) {
+      fraction = 1.0;
+    }
+    textSize(title_size * fraction);
+    textAlign(CENTER, CENTER);
     stroke(decoration_colour);
     fill(background_colour);
-    rect(0, 0, (GetLeftBound() / 2), item_height + (DEFAULT_PADDING * 2));
-    rect(0 + (GetLeftBound() / 2), 0, GetLeftBound() / 2, item_height + (DEFAULT_PADDING * 2));
+    rect(0, 0, (width / 2), item_height);
+    rect(0 + (width / 2), 0, (width / 2), item_height);
     fill(soft_text_colour);
-    text("Motion SBSM", 0, DEFAULT_PADDING, (GetLeftBound() / 2), item_height);
-    text("Weapon SBSM", 0 + (GetLeftBound() / 2), DEFAULT_PADDING, GetLeftBound() / 2, item_height);
+    text("Motion SBSM", 0, 0, (width / 2), item_height);
+    text("Weapon SBSM", 0 + (width / 2), 0, (width / 2), item_height);
     rectMode(CENTER);
   }
+
+  strokeWeight(0.5);
+  stroke(decoration_colour);
+  fill(decoration_colour);
+  rectMode(CORNER);
+  // Left border
+  rect(0, 0, wall_width, HEIGHT);
+  // Right border
+  rect(WIDTH - wall_width, 0, wall_width, HEIGHT);
+  // Bottom border
+  rect(0, HEIGHT - ground_height, WIDTH, ground_height);
+  // Top border
+  rect(0, 0, WIDTH, ground_height);
+
+  rect(0, HEIGHT / 2, WIDTH, ground_height);
+  rect(0, (HEIGHT / 2) + ground_height * 4, WIDTH, ground_height);
+
+  textStyle(NORMAL);  
+  strokeWeight(1);
   // Let's draw a border...
   /*
   rectMode(CORNER);

@@ -149,7 +149,7 @@ function mouseClicked() {
   const node = node_components[current_node];
   const size = get_node_size();
   if(is_mouse_hovering_button(node.x - size / 2, node.y - size / 2, size, size)) {
-    on_node_changed();
+    //on_node_changed();
   }
 }
 
@@ -167,6 +167,7 @@ function draw_node(index) {
     if(mouseIsPressed && !wasMousePressed) {
       colour = color(255, 255, 255, 255);
       current_node = index;
+      try_play_sound(current_node);
     }
     else {
       colour = active_state_colour;
@@ -475,10 +476,10 @@ function setup() {
   const high_note_names = ["C6", "G6", "F6", "E6", "G6", "A6", "F6", "E6"];
   const low_note_names = ["C5", "D5", "F5", "E5", "C5", "F5", "D5", "G5"];
   for(let i = 0; i < NOTE_COUNT; i++) {
-    harp_sounds.push(loadSound(path + "/Harp/"+ low_note_names[i] + "_Harp"));
-    pan_sounds.push(loadSound(path + "/Pan/"+ low_note_names[i] + "_Handpan"));
-    flute_sounds.push(loadSound(path + "/Flute/"+ high_note_names[i] + "_Flute"));
-    high_harp_sounds.push(loadSound(path + "/Harp/"+ high_note_names[i] + "_Harp"));
+    harp_sounds.push(loadSound(path + "/Harp/"+ low_note_names[i] + "_Harp.wav"));
+    pan_sounds.push(loadSound(path + "/Pan/"+ low_note_names[i] + "_Handpan.wav"));
+    flute_sounds.push(loadSound(path + "/Flute/"+ high_note_names[i] + "_Flute.wav"));
+    high_harp_sounds.push(loadSound(path + "/Harp/"+ high_note_names[i] + "_Harp.wav"));
   }
 
   for(let i = 0; i < NODE_COUNT; i++) {
