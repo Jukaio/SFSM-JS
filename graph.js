@@ -16,7 +16,7 @@ let peach_colour;
 let grass_colour;
 let sky_colour;
 
-const text_size = 12;
+let text_size = 12;
 
 const playTime = 1;
 
@@ -436,6 +436,7 @@ function windowResized() {
   canvas.style('margin-right', half_padding+'%');
   flush_entities();
   setup_entities();
+  text_size =  get_node_size() / 4;
 }
 
 function preload() {
@@ -485,7 +486,7 @@ function setup() {
   canvas.style('height', '100%');
 
   setup_entities();
-
+  text_size =  get_node_size() / 4;
 }
 
 function check_hover() {
