@@ -194,7 +194,7 @@ function do_jumping() {
   }
   entity.x += direction * (deltaTime / 1000) * 100 * playTime;
 
-  entity.y -= easeOutSine((1 - jump_t)) * 16 * playTime;
+  entity.y -= easeOutSine((1 - jump_t)) * 960 * playTime * (deltaTime / 1000);
   jump_t += (deltaTime / 1000) * 1.25 * playTime;
 
   if(jump_t > 1) {
