@@ -522,30 +522,26 @@ function draw() {
     is_crouching = false;
   }
 
-  draw_entity();
-
+  
   draw_stack(stack, 0);
   draw_stack(weaponStack, 0 + width / 2);
+  
+  push();
+  strokeWeight(0.5);
+  stroke(decoration_colour);
+  fill(decoration_colour);
+  rectMode(CORNER);
+  rect(0, HEIGHT / 2, WIDTH, ground_height);
+  rect(0, (HEIGHT / 2) + ground_height * 4, WIDTH, ground_height);
+  pop();
+  
+  draw_entity();
   
   if(bullet.active) {
     stroke(red(bullet_colour) / 2, green(bullet_colour) / 2, blue(bullet_colour) / 2, alpha(bullet_colour));
     fill(bullet_colour);
     circle(bullet.x, bullet.y, bullet.r);
   }
-
-
-
-  //draw_HUD();
-  //camera(0, 0);
-  strokeWeight(0);
-  stroke(decoration_colour);
-  fill(decoration_colour);
-  rectMode(CORNER);
-
-  textStyle(NORMAL);
-  const s = separator;  
-  strokeWeight(1);
-  //line(s.start.x, s.start.y, s.end.x, s.end.y);
 
   was_jumping = is_jumping;
   was_crouching = is_crouching;
@@ -561,6 +557,8 @@ function draw() {
     text("CLICK ME!", 0, HEIGHT / 2, WIDTH, HEIGHT - (HEIGHT / 2));
     textSize(32);
     text("A: Left - D: Right\nSpace: Jump - Shift: Crouching\nLMB: Shoot", 0, 0, WIDTH, HEIGHT / 2);
+    rect(0, HEIGHT / 2, WIDTH, ground_height);
+    rect(0, (HEIGHT / 2) + ground_height * 4, WIDTH, ground_height);
     rectMode(CENTER);
   }
   else {
@@ -595,9 +593,6 @@ function draw() {
   rect(0, HEIGHT - ground_height, WIDTH, ground_height);
   // Top border
   rect(0, 0, WIDTH, ground_height);
-
-  rect(0, HEIGHT / 2, WIDTH, ground_height);
-  rect(0, (HEIGHT / 2) + ground_height * 4, WIDTH, ground_height);
 
   textStyle(NORMAL);  
   strokeWeight(1);
