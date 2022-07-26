@@ -505,17 +505,29 @@ function draw_entity()
 
 function is_hovering(x, y, w, h)
 {
-  const mx = mouseX;
-  const my = mouseY;
   const half_width = w / 2;
   const half_height = h / 2;
   const left = x - half_width;
   const right = x + half_width;
   const top = y - half_height;
   const bottom = y + half_height;
-  return mx >= left && mx <= right && my >= top && my <= bottom; 
+  function check(posx, posy) {
+    return posx >= left && posx <= right && posy >= top && posy <= bottom;
+  };
+
+  if(check(mouseX, mouseY)) {
+    return true;
+  }
+  for(let i = 0; i < touches.length; i++) {
+    if(check(touches[i].x, touches[i].y)) {
+      return true;
+    }
+  }
+  return false;
 }
 
+let on_screen_controls = true;
+let wasMousePressed = false;
 function draw() {
   
   background(background_colour);
@@ -533,7 +545,7 @@ function draw() {
     is_crouching = false;
   }
   is_interacting_with_onscreen_buttons = false;
-  function handle_input_button(label, index, height_index, callback)
+  function handle_input_button(is_once_button, label, index, height_index, callback)
   {
     push();
     textAlign(CENTER, CENTER);
@@ -552,7 +564,7 @@ function draw() {
     textSize(title_size * fraction);
 
     if(is_hovering(bx, by, button_size, button_size)) {
-      if(mouseIsPressed === true) {
+      if(mouseIsPressed === true && (!is_once_button || wasMousePressed === false)) {
         const colour = active_state_colour;
         fill(red(colour), green(colour), blue(colour), 255);
         is_interacting_with_onscreen_buttons = true;
@@ -572,10 +584,14 @@ function draw() {
     text(label, bx, by, button_size, button_size);
     pop();
   }
-  handle_input_button("A", 0, 0, () => { direction = -1; });
-  handle_input_button("Jump", 4.5, 0.75, () => { is_jumping = true; });
-  handle_input_button("Crouch", 3.75, -0.25, () => { is_crouching = true; });
-  handle_input_button("D", 1, 0, () => { direction = 1; });
+  if(on_screen_controls) {
+    handle_input_button(false, "A", 0, 0, () => { direction = -1; });
+    handle_input_button(false, "Jump", 4.5, 0.75, () => { is_jumping = true; });
+    handle_input_button(false, "Crouch", 3.75, -0.25, () => { is_crouching = true; });
+    handle_input_button(false, "D", 1, 0, () => { direction = 1; });
+  }
+  //Fix this button position!
+  handle_input_button(true, "Screen Controls", 0, 2, () => { on_screen_controls = !on_screen_controls; });
 
   draw_stack(stack, 0);
   draw_stack(weaponStack, 0 + width / 2);
@@ -597,6 +613,7 @@ function draw() {
     circle(bullet.x, bullet.y, bullet.r);
   }
 
+  wasMousePressed = mouseIsPressed;
   was_jumping = is_jumping;
   was_crouching = is_crouching;
   is_jumping = false;
