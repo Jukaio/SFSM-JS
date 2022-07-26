@@ -531,7 +531,7 @@ function draw() {
     stroke(0, 0);
     const size = height < width ? height : width;
     const padding = size * 0.025;
-    const button_size = size * 0.15;
+    const button_size = size * 0.175;
     const bx = is_left_aligned 
       ? (button_size / 2) + padding + ((padding + button_size) * index)
       : width - ((button_size / 2) + padding + ((padding + button_size) * index));
