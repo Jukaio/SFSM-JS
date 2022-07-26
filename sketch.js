@@ -88,7 +88,7 @@ let was_jumping = false;
 let is_jumping = false;
 
 function touchMoved() {
-  return false;
+  return !focused;
 }
 
 function stack_push(state) {
