@@ -87,7 +87,9 @@ let is_crouching = false;
 let was_jumping = false;
 let is_jumping = false;
 
-
+function touchMoved() {
+  return false;
+}
 
 function stack_push(state) {
   if(stack.length > 0) {
