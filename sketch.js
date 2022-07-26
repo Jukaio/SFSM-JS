@@ -186,7 +186,7 @@ function do_airborne() {
     return false;
   }
   entity.x += direction * (deltaTime / 1000) * 100 * playTime;
-  if(entity.y < HEIGHT - entity.h) {
+  if(entity.y < HEIGHT - ((entity.h / 2) + entity.h * 0.05)) {
     entity.y += (deltaTime * 100)/ 1000 * playTime;
     return true;
   }
