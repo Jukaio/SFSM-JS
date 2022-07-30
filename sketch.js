@@ -369,7 +369,6 @@ function setup() {
   canvas.style('height', '100%');
   HEIGHT = height;
   WIDTH = width;
-
   background_colour = color(41, 43, 47, 255);
   bullet_colour = color(255, 242, 156, 255);
   soft_text_colour = color(211, 191, 215, 255);
@@ -498,11 +497,15 @@ function is_hovering(x, y, w, h)
   }
   return false;
 }
+
 let screen_button_time_point = 0;
 let on_screen_controls = true;
 let wasMousePressed = false;
+const CONTROLS_ON_TITLE = "Screen\nControls\nOn";
+const CONTROLS_OFF_TITLE = "Screen\nControls\nOff";
+let control_button_title = CONTROLS_ON_TITLE
 function draw() {
-  
+
   background(background_colour);
   direction = 0;
   if(keyIsDown(65)) {
@@ -522,6 +525,9 @@ function draw() {
     is_jumping = false;
     is_crouching = false;
   }
+  // Everything became somewhat hardcoded; Meh, whatever. Just a prototype
+  // For next time: Clear distinction between update and drawing routine
+  // Don't be lazy, it fucks up drawing order...
   is_interacting_with_onscreen_buttons = false;
   function handle_input_button(is_left_aligned, is_bottom_aligned, label, index, height_index, callback)
   {
@@ -540,13 +546,13 @@ function draw() {
       : (height / 2) + ((padding + button_size) * height_index) + (button_size / 2) + padding;
     const min = 125;
     let fraction = button_size / min;  
-    let title_size = 32;
+    let title_size = 28;
     if(fraction > 1.0) {
       fraction = 1.0;
     }
     textSize(title_size * fraction);
-
-    if(is_hovering(bx, by, button_size, button_size)) {
+ 
+    if(focused && is_hovering(bx, by, button_size, button_size)) {
       if(mouseIsPressed === true) {
         const colour = active_state_colour;
         fill(red(colour), green(colour), blue(colour), 255);
@@ -567,21 +573,28 @@ function draw() {
     text(label, bx, by, button_size, button_size);
     pop();
   }
+  if(focused) {
   if(on_screen_controls) {
-    handle_input_button(true, true, "A", 0, 0, () => { direction = -1; });
+    handle_input_button(true, true, "Left", 0, 0, () => { direction = -1; });
     handle_input_button(false, true, "Jump", 0, 0.75, () => { is_jumping = true; });
     handle_input_button(false, true, "Crouch", 0.75, -0.25, () => { is_crouching = true; });
-    handle_input_button(true, true, "D", 1, 0, () => { direction = 1; });
+    handle_input_button(true, true, "Right", 1, 0, () => { direction = 1; });
   }
   //Fix this button position!
-  handle_input_button(true, false, "Screen Controls", 0, 0, () => 
+  handle_input_button(true, false, control_button_title, 0, 0, () => 
   {
     if((screen_button_time_point + 250) < millis()) {
       screen_button_time_point = millis();
-      on_screen_controls = !on_screen_controls; 
+      on_screen_controls = !on_screen_controls;
+      if(on_screen_controls) {
+        control_button_title = CONTROLS_ON_TITLE;
+      }
+      else {
+        control_button_title = CONTROLS_OFF_TITLE;
+      }
     }
   });
-
+  }
   draw_stack(stack, 0);
   draw_stack(weaponStack, 0 + width / 2);
   
@@ -609,15 +622,21 @@ function draw() {
   is_crouching = false;
   if(!focused) {
     rectMode(CORNER);
-    fill(background_colour);
+    const min = 200;
+    let fraction = ((width > height ? height : width) / 2) / min;  
+    if(fraction > 1.0) {
+      fraction = 1.0;
+    }
+    
+    fill(red(background_colour), 240);
     rect(0, 0, WIDTH, HEIGHT);
     stroke(decoration_colour);
     textStyle(NORMAL);
-    textSize(62);
+    textSize(fraction * 62);
     textAlign(CENTER, CENTER);
     fill(soft_text_colour);
     text("CLICK ME!", 0, HEIGHT / 2, WIDTH, HEIGHT - (HEIGHT / 2));
-    textSize(32);
+    textSize(fraction * 27);
     text("A: Left - D: Right\nSpace: Jump - Shift: Crouching\nLMB: Shoot", 0, 0, WIDTH, HEIGHT / 2);
     rect(0, HEIGHT / 2, WIDTH, ground_height);
     rect(0, (HEIGHT / 2) + ground_height * 4, WIDTH, ground_height);
