@@ -392,16 +392,28 @@ function slowly_colour_path() {
   }
   const max_time = queue.length * speed_slider.get_value();
   const ip = lerp(0, queue.length, easeOutSine(path_timer));
-  const index = ceil(ip);
+  const index = floor(ip);
 
   const in_bounds = index < queue.length;
   
-  if(in_bounds) {
+  if(path_timer < 0.9999 && in_bounds) {
     const item = queue[index];
     const fraction = index - ip;
 
-    const colour = lerpColor(active_state_colour, inactive_state_colour, easeInSine(fraction));
-    s(colours, item.x, item.y, colour);
+    const colour = lerpColor(inactive_state_colour, active_state_colour, easeInSine(fraction));
+    try
+    {
+      s(colours, item.x, item.y, colour);
+    }
+    catch{
+      reset_colour_path();
+      // Fake it till you make it
+      for(let i = 0; i < queue.length; i++) {
+        const current = queue[i];
+        s(colours, current.x, current.y, active_state_colour);
+      }
+      colouring_done = true;
+    }
     path_timer += (deltaTime / 1000) / max_time;
   }
   else {
@@ -484,9 +496,7 @@ function create_layout() {
     check_and_add(0, -1);
   }
   const { all_rooms, single_rooms, multi_rooms } = create_merge_rooms(rooms);
-  console.log(all_rooms);
-  console.log(single_rooms);
-  console.log(multi_rooms);
+
   some_cool_room = all_rooms;
   //calculate_walls(all_rooms);
 }
@@ -584,8 +594,7 @@ function try_merge(room, closed_rooms, merge_chance, counter) {
     const valid_neighbours = room.neighbours.filter((item) => {
       return !closed_rooms.has(item);
     });
-    console.log(valid_neighbours);
-    //console.log(valid_neighbours);
+
     if(valid_neighbours.length !== 0) {
       const neighbour = valid_neighbours[0];
       // merge
