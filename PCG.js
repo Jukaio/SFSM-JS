@@ -450,7 +450,7 @@ function is_valid(x, y) {
   return in_bounds(x, y) && g(rooms_lookup, x, y) !== null;
 }
 
-let is_maze_layout = false;
+let is_maze_layout = true;
 function create_layout() {
   const cx = floor((gw) / 2);
   const cy = floor((gh) / 2);
@@ -856,13 +856,15 @@ function setup() {
     }
     reset_colour_path();
   });
-  width_slider.slider.mouseReleased(() => {
+  const on_width_slider_leave = () => {
     gw = width_slider.get_value();
     resize_grid();
     create_grid();
     create_layout();
     reset_colour_path();
-  });
+  };
+  width_slider.slider.mouseReleased(on_width_slider_leave);
+  width_slider.slider.touchEnded(on_width_slider_leave);
   width_slider.set_button_colour(active_state_colour);
 
   // Height
@@ -880,13 +882,15 @@ function setup() {
       s(colours, queue[i].x, queue[i].y, active_state_colour);
     }
   });
-  height_slider.slider.mouseReleased(() => {
+  const on_height_slider_leave = () => {
     gh = height_slider.get_value();
     resize_grid();
     create_grid();
     create_layout();
     reset_colour_path();
-  });
+  };
+  height_slider.slider.mouseReleased(on_height_slider_leave);
+  height_slider.slider.touchEnded(on_height_slider_leave);
 
   // Iterations
   iteration_slider.set_title("Iterations");
@@ -900,20 +904,23 @@ function setup() {
     iteration_slider.set_button_colour(active_state_colour);
     mode = WALL_MODE;
   });
-  iteration_slider.slider.mouseReleased(() => {
+  const on_iteration_slider_leave = () => {
     create_grid();
     create_layout();
     reset_colour_path();
-  });
+  };
+  iteration_slider.slider.mouseReleased(on_iteration_slider_leave);
+  iteration_slider.slider.touchEnded(on_iteration_slider_leave);
 
   // Carve
   carve_count_slider.set_title("Path Length");
-  carve_count_slider.slider.mouseReleased(() => {
+  const on_catve_count_slider_leave = () => {
     create_grid();
     create_layout();
     reset_colour_path();
-  });
-
+  };
+  carve_count_slider.slider.mouseReleased(on_catve_count_slider_leave);
+  carve_count_slider.slider.touchEnded(on_catve_count_slider_leave);
   for(let i = 0; i < sliders.length; i++) {
     sliders[i].set_position(10, 40 + (i * 70));
     sliders[i].set_text_size(width < 500 ? 14 : 18);
